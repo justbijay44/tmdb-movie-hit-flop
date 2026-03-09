@@ -2,3 +2,5 @@ requests
 psycopg2-binary
 pandas
 python-dotenv
+dvc 
+dvc-s3
