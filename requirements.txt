@@ -4,3 +4,6 @@ pandas
 python-dotenv
 dvc 
 dvc-s3
+scikit-learn 
+scipy 
+numpy
