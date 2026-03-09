@@ -1,0 +1,5 @@
+outs:
+- md5: 1608c46ba36d1b90835a868bebc83360
+  size: 41689
+  hash: md5
+  path: X.npz
