@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+scikit-learn
+scipy
+numpy
+joblib
+mlflow==2.16.2
+python-dotenv

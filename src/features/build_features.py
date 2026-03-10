@@ -1,5 +1,6 @@
 import os
 import re
+import joblib
 import numpy as np
 import pandas as pd
 import scipy.sparse as sp
@@ -40,6 +41,8 @@ def save_feature(X, y):
     os.makedirs("data/processed", exist_ok=True)
     sp.save_npz("data/processed/X.npz", X)
     np.save("data/processed/y.npy", y)
+    joblib.dump(tfidif, "data/processed/tfidf.pkl")
+    joblib.dump(scaler, "data/processed/scaler.pkl")
     logger.info(f"Saved features: X={X.shape}, y={y.shape}")
 
 if __name__ == "__main__":

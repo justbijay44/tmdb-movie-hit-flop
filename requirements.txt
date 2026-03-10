@@ -7,5 +7,8 @@ dvc-s3
 scikit-learn 
 scipy 
 numpy
-mlflow==2.13.0
+mlflow==2.16.2
 xgboost
+fastapi
+uvicorn
+pydantic
