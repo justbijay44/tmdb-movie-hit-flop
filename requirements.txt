@@ -7,3 +7,5 @@ dvc-s3
 scikit-learn 
 scipy 
 numpy
+mlflow
+xgboost
