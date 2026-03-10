@@ -7,5 +7,5 @@ dvc-s3
 scikit-learn 
 scipy 
 numpy
-mlflow
+mlflow==2.13.0
 xgboost

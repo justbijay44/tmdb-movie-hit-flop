@@ -1,5 +1,6 @@
 import os
 import mlflow
+import mlflow.sklearn
 import numpy as np
 import scipy.sparse as sp
 from xgboost import XGBClassifier
@@ -12,10 +13,10 @@ load_dotenv()
 
 # mlflow setup
 def setup_mlflow():
-    mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URL") or "")
     os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("MLFLOW_TRACKING_USERNAME") or ""
     os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD") or ""
-    mlflow.set_experiment("movie-hit-flop")
+    mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URL") or "")
+    mlflow.set_experiment("movie-hit-flop-v2")
 
 # load features
 def load_features():
@@ -38,9 +39,15 @@ def train(model, model_name, params, X_train, X_test, y_train, y_test):
         # log to mlflow
         mlflow.log_params(params)
         mlflow.log_metrics({
-            "accuracy": float(accuracy), "f1": float(f1), "precision": float(precision), "recall": float(recall)
+            "accuracy": float(accuracy), "f1": float(f1),
+            "precision": float(precision), "recall": float(recall)
         })
-        mlflow.sklearn.log_model(model, model_name)
+
+        try:
+            mlflow.sklearn.log_model(model, model_name) 
+            logger.info(f"Model artifact saved: {model_name}")
+        except Exception as e:
+            logger.error(f"Failed to save model artifact: {e}")
 
         logger.info(f"{model_name} | accuracy_score: {accuracy:.2f} | f1_score: {f1:.2f}")
 
@@ -52,21 +59,21 @@ if __name__ == "__main__":
     # experiment 1
     rf_params = {"n_estimators": 100, "max_depth":8}
     train(
-        RandomForestClassifier(**rf_params, class_weight='balanced', random_state=42),
-        "Random Forest", rf_params, X_train, X_test, y_train, y_test
+        RandomForestClassifier(**rf_params, class_weight='balanced', random_state=42),  # type: ignore
+        "RandomForest", rf_params, X_train, X_test, y_train, y_test
     )
 
     # experiment 2
     xgb_params = {"n_estimators": 100, "max_depth":6, "learning_rate": 0.1}
     train(
         XGBClassifier(**xgb_params, eval_metric="logloss", random_state=42),
-        "XG Boost", xgb_params, X_train, X_test, y_train, y_test
+        "XGBoost", xgb_params, X_train, X_test, y_train, y_test
     )
 
     # experiment 3 - rf tuned
     rf_params2 = {"n_estimators": 200, "max_depth": 15}
     train(
-        RandomForestClassifier(**rf_params2, class_weight="balanced", random_state=42),
+        RandomForestClassifier(**rf_params2, class_weight="balanced", random_state=42), # type: ignore
         "RandomForest_v2", rf_params2, X_train, X_test, y_train, y_test
     )
 
