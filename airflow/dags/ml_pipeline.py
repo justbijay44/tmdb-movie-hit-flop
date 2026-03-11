@@ -44,6 +44,33 @@ def movie_ml_pipeline():
         X, y, tfidf, scaler = build_features(df)
         save_feature(X, y, tfidf, scaler)
 
-    _= task_ingest() >> task_export() >> task_features()
+    @task
+    def task_train():
+        from src.training.train import setup_mlflow, load_features, train
+        from sklearn.ensemble import RandomForestClassifier
+        from xgboost import XGBClassifier
+        from sklearn.model_selection import train_test_split
+        
+        setup_mlflow()
+        X, y = load_features()
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        rf_params = {"n_estimators":100, "max_depth": 8}
+        train(
+            RandomForestClassifier(**rf_params, class_weight="balanced", random_state=42),  # type: ignore
+            "RandomForest", rf_params, X_train, X_test, y_train, y_test
+        )
+
+        xgb_params = {"n_estimators": 100, "max_depth": 6, "learning_rate": 0.1}
+        train(
+            XGBClassifier(**xgb_params, eval_metric="logloss", random_state=42),
+            "XGBoost", xgb_params, X_train, X_test, y_train, y_test
+        )
+
+    @task
+    def task_register():
+        from src.training.register_model import register_best_model
+        register_best_model()
+
+    _= task_ingest() >> task_export() >> task_features() >> task_train() >> task_register()
 
 movie_ml_pipeline()

@@ -2,9 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY docker_requirements.txt .
+COPY requirements_docker.txt .
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r docker_requirements.txt
+    && pip install --no-cache-dir -r requirements_docker.txt
 
 COPY . .
 EXPOSE 8000

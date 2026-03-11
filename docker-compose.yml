@@ -12,7 +12,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   airflow:
-    image: apache/airflow:3.1.7
+    build: 
+      context: .
+      dockerfile: Dockerfile.airflow
     container_name: movie-airflow
     depends_on:
       - postgres
