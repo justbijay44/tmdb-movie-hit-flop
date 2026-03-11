@@ -37,11 +37,11 @@ def build_features(df):
     y = df["label"].values
     return X, y, tfidf, scaler
 
-def save_feature(X, y):
+def save_feature(X, y, tfidf, scaler):
     os.makedirs("data/processed", exist_ok=True)
     sp.save_npz("data/processed/X.npz", X)
     np.save("data/processed/y.npy", y)
-    joblib.dump(tfidif, "data/processed/tfidf.pkl")
+    joblib.dump(tfidf, "data/processed/tfidf.pkl")
     joblib.dump(scaler, "data/processed/scaler.pkl")
     logger.info(f"Saved features: X={X.shape}, y={y.shape}")
 
@@ -49,4 +49,4 @@ if __name__ == "__main__":
     df = load_data()
     df = create_labels(df)
     X, y, tfidif, scaler = build_features(df)
-    save_feature(X, y)
+    save_feature(X, y, tfidif, scaler)

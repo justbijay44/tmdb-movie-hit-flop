@@ -1,11 +1,11 @@
 import os
 import pandas as pd
-from fetch_movies import get_db_connection
+from src.ingestion.fetch_movies import get_db_connection
 
 def export_to_csv():
     conn = get_db_connection()
     query = "SELECT * FROM movies WHERE budget > 0 AND revenue > 0;"
-    df = pd.read_sql(query, conn)
+    df = pd.read_sql_query(query, conn)   
     conn.close()
 
     os.makedirs("data/raw", exist_ok=True)

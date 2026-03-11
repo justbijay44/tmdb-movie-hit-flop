@@ -7,3 +7,6 @@ numpy
 joblib
 mlflow==2.16.2
 python-dotenv
+streamlit
+fastapi
+uvicorn

@@ -7,9 +7,52 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5444:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  airflow:
+    image: apache/airflow:3.1.7
+    container_name: movie-airflow
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${DB_USER}:${DB_PASSWORD}@postgres/${DB_NAME}
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      DB_HOST: postgres
+      DB_PORT: "5432"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./src:/opt/airflow/src
+      - ./data:/opt/airflow/data
+    ports:
+      - "8080:8080"
+    command: standalone
+    env_file:
+      - .env
+
+  fastapi:
+    build: .
+    container_name: movie-fastapi
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+  
+  streamlit:
+    build: .
+    environment:
+      API_URL: http://fastapi:8000/predict
+    container_name: movie-streamlit
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    command: streamlit run src/serving/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+    depends_on:
+      - fastapi
 volumes:
   postgres_data:

@@ -12,3 +12,5 @@ xgboost
 fastapi
 uvicorn
 pydantic
+streamlit
+apache-airflow
