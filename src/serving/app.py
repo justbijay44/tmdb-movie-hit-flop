@@ -19,7 +19,7 @@ def load_model():
     os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("MLFLOW_TRACKING_USERNAME") or ""
     os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD") or ""
     mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URL") or "")
-    model = mlflow.sklearn.load_model("models:/movie-hit-flop-model/latest")
+    model = mlflow.sklearn.load_model("models:/movie-hit-flop-model/1")
     logger.info("Model loaded from registry")
     return model
 
