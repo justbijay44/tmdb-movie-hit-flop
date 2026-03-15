@@ -41,3 +41,13 @@ For now the user has to pass on the following values to get a prediction
     "popularity": 150.0,
     "vote_avg": 8.5
 }
+
+
+### Deployment
+
+We have performed deployment through render and as its from free tier. The site will be inactive after 15 minutes of not in use.
+
+FastAPI url - https://tmdb-movie-hit-flop.onrender.com/docs
+Streamlit url - https://tmdb-movie-hit-flop-1.onrender.com/
+
+The fastapi has to be active before using the streamlit.
