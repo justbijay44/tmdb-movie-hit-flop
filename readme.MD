@@ -51,3 +51,16 @@ FastAPI url - https://tmdb-movie-hit-flop.onrender.com/docs
 Streamlit url - https://tmdb-movie-hit-flop-1.onrender.com/
 
 The fastapi has to be active before using the streamlit.
+
+### Limitation
+
+** Missing Data ** - Upcoming movies often have no budget on TMDB. 
+We default to $50M which may skew predictions.
+
+** Model Accuracy ** — ~77% accuracy. Roughly 1 in 4 predictions may be wrong.
+Confidence score reflects model uncertainty, not a guaranteed outcome.
+
+** Feature Limitations ** - Model predicts based on `overview text`, 
+`budget`, `popularity`, and `vote_avg` only. A movie with a great cast, 
+director, or marketing campaign may still be predicted as Flop if these 
+signals are weak in TMDB data.
