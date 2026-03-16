@@ -14,7 +14,8 @@ def load_data():
     return df
 
 def create_labels(df):
-    df["label"] = ((df['revenue'] > 2.5 * df['budget']) & (df['vote_avg'] >= 7.5)).astype(int)
+    # df["label"] = ((df['revenue'] > 2.5 * df['budget']) & (df['vote_avg'] >= 7.5)).astype(int)
+    df["label"] = (df['revenue'] > 2.5 * df['budget']).astype(int)
     return df
 
 def clean_text(text):

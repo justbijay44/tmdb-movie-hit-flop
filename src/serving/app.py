@@ -2,6 +2,7 @@ import os
 import joblib
 import mlflow
 import numpy as np
+import pandas as pd
 import scipy.sparse as sp
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -38,13 +39,19 @@ def get_health():
 
 @app.post("/predict")
 def predict(movie: MovieInput):
+    logger.info(f"Input received - title: {movie.title} | budget: {movie.budget} | popularity: {movie.popularity} | vote_avg: {movie.vote_avg}")
     text = f"{movie.title} {movie.overview}"
     text_features = tfidf.transform([text])
 
-    num_features = scaler.transform([[movie.vote_avg, movie.popularity, movie.budget]])
+    num_features = scaler.transform(pd.DataFrame([{
+        "vote_avg": movie.vote_avg,
+        "popularity": movie.popularity,
+        "budget": movie.budget
+    }]))
+
     num_sparse = sp.csr_matrix(num_features)
 
-    X = sp.hstack([text_features, num_features])
+    X = sp.hstack([text_features, num_sparse])
     
     pred = model.predict(X)[0]
     proba = model.predict_proba(X)[0]
